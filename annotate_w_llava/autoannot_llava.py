@@ -37,11 +37,12 @@ def annotate(args):
     questions = get_chunk(questions, args.num_chunks, args.chunk_idx)
     answers_file = os.path.expanduser(args.answers_file)
     os.makedirs(os.path.dirname(answers_file), exist_ok=True)
-    ans_file = open(answers_file, "w")
+    ans_file = open(answers_file, "a")
+    questions= questions[args.start_idx:]
     for line in tqdm(questions):
         idx = line["question_id"]
         image_file = line["image"]
-        qs = line["text"]
+        qs = line["text_obs"]
         cur_prompt = qs
         if model.config.mm_use_im_start_end:
             qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
@@ -96,17 +97,18 @@ def annotate(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-path", type=str, default="facebook/opt-350m")
-    parser.add_argument("--model-base", type=str, default=None)
-    parser.add_argument("--image-folder", type=str, default="")
-    parser.add_argument("--question-file", type=str, default="tables/question.jsonl")
-    parser.add_argument("--answers-file", type=str, default="answer.jsonl")
+    parser.add_argument("--model-path", type=str, default="/home/cglossop/llava-v1.5-13b")
+    parser.add_argument("--model-base", type=str, default="/home/cglossop/llava-v1.5-13b")
+    parser.add_argument("--image-folder", type=str, default="/home/cglossop/sacson")
+    parser.add_argument("--question-file", type=str, default="/home/cglossop/LLaVA/annotate_w_llava/sacson_questions.jsonl")
+    parser.add_argument("--answers-file", type=str, default="/home/cglossop/LLaVA/annotate_w_llava/sacson_answers.jsonl")
     parser.add_argument("--conv-mode", type=str, default="llava_v1")
     parser.add_argument("--num-chunks", type=int, default=1)
     parser.add_argument("--chunk-idx", type=int, default=0)
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top_p", type=float, default=None)
     parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--start-idx", type=int, default=0)
     args = parser.parse_args()
 
     annotate(args)
