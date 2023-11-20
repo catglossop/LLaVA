@@ -9,10 +9,10 @@ def file_num(file):
         return 0
 
 
-question_obs = "This is an observation from the Describe the image in a single sentence and be concise."
-question_act = "What is the action being performed in the image?"
-question_file = "/home/cglossop/LLaVa/annotate_w_llava/gnm_questions_1_traj_sorted.jsonl"
-input_dataset = "/home/cglossop/gnm_dataset/sacson/Dec-06-2022-bww8_00000000_0"
+question_obs = "This is an observation from the perspective of a robot. Describe the image noting any specific objects or structures in a single sentence and be concise."
+question_act = "These are three consecutive observations from the perspective of a robot. Describe the motion of the robot."
+question_file = "/home/cglossop/LLaVA/annotate_w_llava/sacson_questions.jsonl"
+input_dataset = "/home/cglossop/sacson"
 
 question_cnt = 0
 for root, dirs, files in os.walk(input_dataset):
@@ -27,7 +27,8 @@ for root, dirs, files in os.walk(input_dataset):
             question_cnt += 1
 
             question_dir["image"] = image_path
-            question_dir["text"] = question 
+            question_dir["text_obs"] = question_obs 
+            question_dir["text_act"] = question_act
             with open(question_file, 'a+') as fp:
                 json.dump(question_dir, fp)
                 fp.write("\n")
