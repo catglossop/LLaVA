@@ -96,7 +96,14 @@ def annotate(args):
             outputs = outputs[:-len(stop_str)]
         outputs = outputs.strip()
 
+        ans_file = open(os.path.join(traj_name_init, "lang.json"), "w")
         ans_id = shortuuid.uuid()
+        ans_file.write(json.dumps({"traj_name": traj_name_init.split("/")[-1],
+                                   "text": outputs,
+                                   "raw_prompts" : traj_ans,
+                                   "answer_id": ans_id,
+                                   "model_id": model_name,
+                                   "metadata": {}}) + "\n")
         print("Response: ", outputs)
         breakpoint()
 
